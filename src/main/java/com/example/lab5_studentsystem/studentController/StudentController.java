@@ -14,23 +14,24 @@ public class StudentController {
     ArrayList<Student> students = new ArrayList<>();
     ArrayList<Student> studentsAboveAverage = new ArrayList<>();
 
-    @GetMapping("/show")
+    @GetMapping("/get")
     public ArrayList<Student> getStudents() {
         return students;
     }
 
-    @PostMapping("create-student")
-    public ApiResponse createStudent(@RequestBody Student student) {
-        if (students.contains(student)) {
-            return new ApiResponse("Student already exists");
+    @PostMapping("new")
+    public ApiResponse newStudent(@RequestBody Student student) {
+        for (Student s : students) {
+            if (s.getID() == student.getID()) {
+                return new ApiResponse("student already exists");
+            }
         }
-
 
         this.students.add(student);
         return new ApiResponse("Successfully created student");
     }
 
-    @PutMapping("/update-student/{index}")
+    @PutMapping("/update/{index}")
     public ApiResponse updateStudent(@PathVariable int index,@RequestBody Student student) {
         if(index > students.size() || index < 0) {
             return new ApiResponse("student does not exist");
@@ -40,7 +41,7 @@ public class StudentController {
     }
 
 
-    @DeleteMapping("/delete-student/{index}")
+    @DeleteMapping("/delete/{index}")
     public ApiResponse deleteStudent(@PathVariable int index) {
         if(index > students.size() || index < 0) {
             return new ApiResponse("student does not exist");
@@ -49,8 +50,8 @@ public class StudentController {
         return new ApiResponse("Student deleted successfully");
     }
 
-    @GetMapping("/get-above-average")
-    public ArrayList<Student> getOverAverage() {
+    @GetMapping("/get-above-average-gpa")
+    public ArrayList<Student> getOverAverageGPA() {
         double average = 0;
 
         for(Student student : students) {
