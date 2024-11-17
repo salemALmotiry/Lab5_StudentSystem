@@ -12,7 +12,6 @@ import java.util.Map;
 @RequestMapping("/api/v1/student-system")
 public class StudentController {
     ArrayList<Student> students = new ArrayList<>();
-    ArrayList<Student> studentsAboveAverage = new ArrayList<>();
 
     @GetMapping("/get")
     public ArrayList<Student> getStudents() {
@@ -25,6 +24,12 @@ public class StudentController {
             if (s.getID() == student.getID()) {
                 return new ApiResponse("student already exists");
             }
+        }
+
+        if (student.getGPA() > 5.00 || student.getGPA() < 0.00) {
+            return new ApiResponse("GPA is not correct");
+        }else if (student.getAge() <= 18 ) {
+            return new ApiResponse("Age is not correct");
         }
 
         this.students.add(student);
@@ -52,6 +57,8 @@ public class StudentController {
 
     @GetMapping("/get-above-average-gpa")
     public ArrayList<Student> getOverAverageGPA() {
+        ArrayList<Student> studentsAboveAverage = new ArrayList<>();
+
         double average = 0;
 
         for(Student student : students) {
@@ -81,7 +88,7 @@ public class StudentController {
                if (student.getID()>4.75){
                    map.put("honor","First honor degree");
                }else if(student.getID()>4.25){
-                   map.put("honor","First honor degree");
+                   map.put("honor","Second honor degree");
 
                }else {
                    map.put("honor","None");
